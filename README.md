@@ -2,6 +2,8 @@
 
 A Cloudflare Worker that provides OpenAI and Claude compatible API endpoints, powered by Cloudflare AI Gateway.
 
+![](https://resource.libx.fun/pic/2025/11/20251130143423750.png)
+
 ## Features
 
 - 🔄 **OpenAI API Compatibility**: `/chat/completions`, `/models`
