@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import openaiRouter from "./router/OpenAIRouter";
-import claudeRouter from "./router/ClaudeRouter";
+import claudeRouter from "./router/claude/ClaudeRouter";
 import {logger} from "hono/logger";
 
 const app = new Hono<{ Bindings: Bindings }>();
