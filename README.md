@@ -66,59 +66,66 @@ A Cloudflare Worker that provides OpenAI and Claude compatible API endpoints, po
 
 ## Deployment to Cloudflare
 
-This project uses Wrangler environments and Cloudflare Secrets to secure sensitive credentials.
+### Prerequisites
 
-### 1. Configure Secrets
+Before deploying, you need to configure model connections in Cloudflare AI Gateway:
 
-Set sensitive keys as Cloudflare Secrets (not stored in code):
+1. **Go to Cloudflare Dashboard**
+   - Navigate to `AI` → `AI Gateway`
+   - Create a new Gateway or select an existing one
+   - Note your Gateway ID (you'll need this for `MODELS_CONFIG`)
 
-```bash
-# Set PROXY_API_KEY as secret
-npx wrangler secret put PROXY_API_KEY --env production
+2. **Configure Model Providers**
+   - Add your model providers (Google AI Studio, OpenRouter, etc.)
+   - Set up API keys for each provider
+   - Test the connections to ensure they work
 
-# Set CF_GATEWAY_KEY as secret
-npx wrangler secret put CF_GATEWAY_KEY --env production
-```
+### Configuration
 
-You'll be prompted to enter the secret values securely.
+All environment variables should be configured on **Cloudflare Dashboard** (recommended).
 
-**Alternative: Using Cloudflare Dashboard**
-1. Go to Workers & Pages → Your Worker → Settings → Variables
-2. Under "Environment Variables", select "Production" environment
-3. Add secrets:
-   - `PROXY_API_KEY`: Your custom authentication token
-   - `CF_GATEWAY_KEY`: Your Cloudflare AI Gateway key
+#### Cloudflare Dashboard
+1. **Deploy project to worker**
+   - [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mrdear/cloudflare-ai-proxy)
 
-### 2. Configure Models (Plaintext)
+2. **Go to Worker Settings**
+   - Navigate to `Workers & Pages` → Select your Worker → `Settings` → `Variables`
+   - Select the "Production" environment
 
-Edit `wrangler.jsonc` and update the `vars` section with your models:
+3. **Configure Secrets (Encrypted)**
+   
+   Add the following as **Encrypted** variables:
+   
+   - **`PROXY_API_KEY`**: Your custom authentication token for API access
+   - **`CF_GATEWAY_KEY`**: Your Cloudflare AI Gateway API key
 
-```jsonc
-"vars": {
-      "MODELS_CONFIG": "[{\"id\":\"google-ai-studio/gemini-2.5-flash\",\"name\":\"gemini-2.5-flash\",\"endpoint\":\"/v1/YOUR_ID/proxy/compat\"}]"
-}
-```
-
-**MODELS_CONFIG format:**
-- Must be a valid JSON string (escaped quotes)
-- Single line, no line breaks
-- Replace `YOUR_ID` with your Cloudflare AI Gateway ID
-- Example with multiple models:
-```json
-"[{\"id\":\"google-ai-studio/gemini-2.5-flash\",\"name\":\"gemini-2.5-flash\",\"endpoint\":\"/v1/YOUR_ID/proxy/compat\"},{\"id\":\"x-ai/grok-4.1-fast:free\",\"name\":\"grok-4.1-fast:free\",\"endpoint\":\"/v1/YOUR_ID/proxy/openrouter\"}]"
-```
-
-### 3. Deploy
-
-```bash
-pnpm run deploy
-```
-
-### 4. Update types (optional)
-
-```bash
-pnpm run cf-typegen
-```
+4. **Configure Model Mapping (Plaintext)**
+   
+   Add the following as **Plaintext** variable:
+   
+   - **`MODELS_CONFIG`**: JSON array mapping your models to AI Gateway endpoints
+   
+   **Format:**
+   ```json
+   [
+    {
+      "id": "google-ai-studio/gemini-2.5-flash",
+      "name": "gemini-2.5-flash",
+      "endpoint": "/v1/YOUR_GATEWAY_ID/proxy/compat"
+    },
+    {
+      "id": "x-ai/grok-beta",
+      "name": "grok-beta",
+      "endpoint": "/v1/YOUR_GATEWAY_ID/proxy/openrouter"
+    }
+   ]
+   ```
+   
+   **Important:**
+   - Replace `YOUR_GATEWAY_ID` with your actual Cloudflare AI Gateway ID
+   - The `id` should match the provider/model identifier you configured in AI Gateway
+   - The `name` is what users will use in API requests
+   - The `endpoint` path should match your AI Gateway Universal Endpoint configuration
 
 ## Usage
 
