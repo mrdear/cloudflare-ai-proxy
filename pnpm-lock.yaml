@@ -11,6 +11,9 @@ importers:
       hono:
         specifier: ^4.10.7
         version: 4.10.7
+      openai:
+        specifier: ^6.9.1
+        version: 6.9.1(ws@8.18.0)
     devDependencies:
       wrangler:
         specifier: ^4.51.0
@@ -436,6 +439,18 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  openai@6.9.1:
+    resolution: {integrity: sha512-vQ5Rlt0ZgB3/BNmTa7bIijYFhz3YBceAA3Z4JuoMSBftBF9YqFHIEhZakSs+O/Ad7EaoEimZvHxD5ylRjN11Lg==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
+
   path-to-regexp@6.3.0:
     resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
 
@@ -807,6 +822,10 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  openai@6.9.1(ws@8.18.0):
+    optionalDependencies:
+      ws: 8.18.0
 
   path-to-regexp@6.3.0: {}
 
